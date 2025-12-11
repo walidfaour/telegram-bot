@@ -1,14 +1,23 @@
-from telethon import TelegramClient, events
 import os
+from telegram.ext import ApplicationBuilder, CommandHandler
+from telegram import Update
+from telegram.ext import ContextTypes
 
-api_id = int(os.environ["API_ID"])
-api_hash = os.environ["API_HASH"]
+TOKEN = os.getenv("BOT_TOKEN")
 
-client = TelegramClient("session", api_id, api_hash)
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Hello Walid! Bot is running on Railway 🚀")
 
-@client.on(events.NewMessage)
-async def handler(event):
-    print("Message:", event.text)
+async def ping(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("pong")
 
-client.start()
-client.run_until_disconnected()
+def main():
+    app = ApplicationBuilder().token(TOKEN).build()
+
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("ping", ping))
+
+    app.run_polling()
+
+if __name__ == "__main__":
+    main()
