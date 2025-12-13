@@ -30,8 +30,8 @@ async def message_handler(event):
             "Great job! The next step is to find a hidden message in the office? "
             "But how would you find it? The message or password is invisible and to be able to see it "
             "you have to use a UV light. To get a UV light, you can find it in one of the drawers in "
-            "the first raw of desks where SOC sits right infront of you. It looks like a black & grey object.\n\n"
-            "Try to find the hidden text on one of your two monitors, at the back side of the monitor. "
+            "the first raw of desks where SOC sits right infront of you. It is a small yellow keychain.\n\n"
+            "Try to find the hidden text on the paper that can in your secret santa envelope. "
             "The hidden text you find will be the password you should enter here: "
             "https://ezekielsecretsanta.com/secret-santa-login"
         )
@@ -40,4 +40,5 @@ async def message_handler(event):
         await event.reply("❌ Incorrect password. Try again.")
 
 print("Bot is running...")
+
 client.run_until_disconnected()
