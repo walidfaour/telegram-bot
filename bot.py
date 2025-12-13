@@ -4,41 +4,38 @@ import os
 API_ID = int(os.environ.get("API_ID"))
 API_HASH = os.environ.get("API_HASH")
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
+SECRET_PASSWORD = os.environ.get("SECRET_PASSWORD")
 
 client = TelegramClient('bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
 
-# Password users must enter
-SECRET_PASSWORD = "WhatstheHiddenMessage"
-
-# Track which users are currently entering a password
-awaiting_password = set()
-
-@client.on(events.NewMessage(pattern='/start'))
-async def start_handler(event):
-    user = event.sender_id
-    awaiting_password.add(user)
-    await event.reply("🔐 Welcome! Please enter the password:")
+# Commands that trigger the Phase 8 message
+HELP_COMMANDS = {'/start', '/help', 'help', '?'}
 
 @client.on(events.NewMessage)
-async def password_checker(event):
-    user = event.sender_id
+async def message_handler(event):
     text = event.raw_text.strip()
-
-    # If user is not in password mode, ignore
-    if user not in awaiting_password:
-        return
-
-    # Check password
-    if text == SECRET_PASSWORD:
-        awaiting_password.remove(user)
-
+    text_lower = text.lower()
+    
+    # Check if it's a help/start command
+    if text_lower in HELP_COMMANDS:
         await event.reply(
-            "✅ Correct!\n\n"
-            "Use the UV light in the drawer on the back of the page that was inside your envelope.\n"
-            "You'll see a hidden password.\n\n"
-            "Then login using that password here:\n"
-            "http://ezekielsecretsanta.com/secret-santa-login"
+            "📌 **Phase 8 Challenge:**\n\n"
+            "Good reaching to phase 8.\n"
+            "Enter the password to reveal the next challenge."
         )
+    # Check if it's the correct password
+    elif text == SECRET_PASSWORD:
+        await event.reply(
+            "📌 **Phase 9 Challenge:**\n\n"
+            "Great job! The next step is to find a hidden message in the office? "
+            "But how would you find it? The message or password is invisible and to be able to see it "
+            "you have to use a UV light. To get a UV light, you can find it in one of the drawers in "
+            "the first raw of desks where SOC sits right infront of you. It looks like a black & grey object.\n\n"
+            "Try to find the hidden text on one of your two monitors, at the back side of the monitor. "
+            "The hidden text you find will be the password you should enter here: "
+            "https://ezekielsecretsanta.com/secret-santa-login"
+        )
+    # Anything else is incorrect
     else:
         await event.reply("❌ Incorrect password. Try again.")
 
